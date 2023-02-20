@@ -11,6 +11,7 @@ packages = [{include = "depraved_bot"}]
 python = "^3.10"
 disnake = "^2.8.0"
 python-dotenv = "^0.21.1"
+pyyaml = "^6.0"
 
 
 [build-system]
