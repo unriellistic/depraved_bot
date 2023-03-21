@@ -3,6 +3,7 @@ import disnake
 from disnake.ext import commands
 from dotenv import load_dotenv
 
+from depraved_bot.config import load_kink_config
 from depraved_bot.check_roles import check_roles
 
 command_sync_flags = commands.CommandSyncFlags.default()
@@ -15,6 +16,9 @@ bot = commands.InteractionBot(
     intents=intents,
 )
 
+required_kinks = []
+optional_kinks = []
+
 @bot.slash_command(description="Ping me to check if I'm alive.")
 async def ping(inter: disnake.ApplicationCommandInteraction):
     await inter.response.send_message("Hello! I'm alive!")
@@ -26,7 +30,7 @@ class RoleCheckButton(disnake.ui.View):
 
     @disnake.ui.button(label="I've selected all my kinks")
     async def check_roles(self, button: disnake.ui.Button, inter: disnake.MessageInteraction):
-        missing_required, missing_optional = check_roles(inter.author)
+        missing_required, missing_optional = check_roles(inter.author, required_kinks, optional_kinks)
         
         if not missing_required and not missing_optional:
             # remove role
@@ -50,7 +54,9 @@ if __name__ == "__main__":
     env = os.getenv("ENVIRONMENT", "dev")
     if env in ["dev", "development"]:
         bot.run(os.getenv("DISCORD_TOKEN_DEV"))
+        required_kinks, optional_kinks = load_kink_config(os.getenv("CONFIG_PATH_DEV"))
     elif env in ["prod", "production"]:
         bot.run(os.getenv("DISCORD_TOKEN_PROD"))
+        required_kinks, optional_kinks = load_kink_config(os.getenv("CONFIG_PATH_PROD"))
     else:
         print("invalid ENVIRONMENT, exiting.")
