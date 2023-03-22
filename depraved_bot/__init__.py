@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 from depraved_bot.config import load_kink_config
 from depraved_bot.check_roles import check_roles
 
+from depraved_bot.cogs import ping, role_checker
+
 command_sync_flags = commands.CommandSyncFlags.default()
 command_sync_flags.sync_commands_debug = True
 
@@ -19,30 +21,8 @@ bot = commands.InteractionBot(
 required_kinks = []
 optional_kinks = []
 
-@bot.slash_command(description="Ping me to check if I'm alive.")
-async def ping(inter: disnake.ApplicationCommandInteraction):
-    await inter.response.send_message("Hello! I'm alive!")
-
-
-class RoleCheckButton(disnake.ui.View):
-    def __init__(self):
-        super().__init__(timeout=None)
-
-    @disnake.ui.button(label="I've selected all my kinks")
-    async def check_roles(self, button: disnake.ui.Button, inter: disnake.MessageInteraction):
-        missing_required, missing_optional = check_roles(inter.author, required_kinks, optional_kinks)
-        
-        if not missing_required and not missing_optional:
-            # remove role
-            await inter.response.send_message("Welcome to the server!", ephemeral = True)
-        else:
-            await inter.response.send_message("You're missing one or more roles.", ephemeral = True)
-
-@bot.slash_command(description="Set up the role checking button in this channel.")
-async def setup_button(inter: disnake.ApplicationCommandInteraction):
-    view = RoleCheckButton()
-    await inter.channel.send("Please click this button when you're done selecting all your kink roles.", view=view)
-    await inter.response.send_message("Message sent.")
+bot.add_cog(ping.PingCog(bot))
+bot.add_cog(role_checker.RoleCheckerCog(bot))
 
 
 @bot.event
