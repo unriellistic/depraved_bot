@@ -1,12 +1,14 @@
 import os
+
 import disnake
 from disnake.ext import commands
 from dotenv import load_dotenv
+from sqlalchemy import create_engine, MetaData, Table, Column, BigInteger, String
 
-from depraved_bot.config import load_config
-from depraved_bot.check_roles import check_roles
+from depraved_bot.config import load_config_from_sql
 
-from depraved_bot.cogs import ping, role_checker
+from depraved_bot.cogs.ping import PingCog
+from depraved_bot.cogs.role_checker import RoleCheckerCog
 
 command_sync_flags = commands.CommandSyncFlags.default()
 command_sync_flags.sync_commands_debug = True
@@ -28,14 +30,36 @@ if __name__ == "__main__":
 
     if env in ["dev", "development"]:
         bot_token = os.getenv("DISCORD_TOKEN_DEV")
-        required_kinks, optional_kinks = load_config(os.getenv("CONFIG_PATH_DEV"))
+        database_addr = os.getenv("DATABASE_DEV")
     elif env in ["prod", "production"]:
         bot_token = os.getenv("DISCORD_TOKEN_PROD")
-        required_kinks, optional_kinks = load_config(os.getenv("CONFIG_PATH_PROD"))
+        database_addr = os.getenv("DATABASE_PROD")
     else:
         print("invalid ENVIRONMENT, exiting.")
 
-    bot.add_cog(ping.PingCog(bot))
-    bot.add_cog(role_checker.RoleCheckerCog(bot, required_kinks, optional_kinks))
+    engine = create_engine(database_addr)
+    metadata_obj = MetaData()
+
+    table_required = Table(
+        "required_kinks",
+        metadata_obj,
+        Column("name", String, primary_key=True),
+        Column("id", BigInteger),
+        autoload_with=engine,
+    )
+    table_optional = Table(
+        "optional_kinks",
+        metadata_obj,
+        Column("name", String, primary_key=True),
+        Column("green", BigInteger),
+        Column("yellow", BigInteger),
+        Column("red", BigInteger),
+        autoload_with=engine,
+    )
+
+    required_kinks, optional_kinks = load_config_from_sql(engine, table_required, table_optional)
+
+    bot.add_cog(PingCog(bot))
+    bot.add_cog(RoleCheckerCog(bot, required_kinks, optional_kinks))
 
     bot.run(bot_token)
