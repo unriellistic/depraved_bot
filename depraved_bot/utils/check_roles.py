@@ -2,6 +2,7 @@ import disnake
 from depraved_bot.config import *
 
 def check_roles(member: disnake.Member, required_kinks: list[RequiredKink], optional_kinks: list[OptionalKink]):
+    '''Checks a member's roles, and returns lists of required and optional roles that are missing.'''
     role_list =  [role.id for role in member.roles]
 
     missing_required = []

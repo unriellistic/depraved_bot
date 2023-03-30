@@ -7,9 +7,9 @@ from sqlalchemy import create_engine, MetaData, Table, Column, BigInteger, Strin
 
 from depraved_bot.config import load_config_from_sql
 
-from depraved_bot.cogs.ping import PingCog
-from depraved_bot.cogs.role_checker import RoleCheckerCog
+from depraved_bot.cogs import PingCog, RoleCheckerCog
 
+# bot initialization
 command_sync_flags = commands.CommandSyncFlags.default()
 command_sync_flags.sync_commands_debug = True
 
@@ -25,6 +25,7 @@ async def on_ready():
     print(f"Logged in as {bot.user}! (ID: {bot.user.id})\n-------")
 
 if __name__ == "__main__":
+    # get bot token and database from .env file
     load_dotenv()
     env = os.getenv("ENVIRONMENT", "dev")
 
@@ -37,9 +38,11 @@ if __name__ == "__main__":
     else:
         print("invalid ENVIRONMENT, exiting.")
 
+    # initialize database
     engine = create_engine(database_addr)
     metadata_obj = MetaData()
 
+    # initialize data tables and get existing data
     table_required = Table(
         "required_kinks",
         metadata_obj,
@@ -57,8 +60,10 @@ if __name__ == "__main__":
         autoload_with=engine,
     )
 
+    # process the raw table data
     required_kinks, optional_kinks = load_config_from_sql(engine, table_required, table_optional)
 
+    # add bot commands
     bot.add_cog(PingCog(bot))
     bot.add_cog(RoleCheckerCog(bot, required_kinks, optional_kinks))
 

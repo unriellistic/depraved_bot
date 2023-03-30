@@ -12,8 +12,10 @@ class RoleCheckerButton(disnake.ui.View):
 
     @disnake.ui.button(label="I've selected all my kinks", style=disnake.ButtonStyle.primary)
     async def check_roles(self, button: disnake.ui.Button, inter: disnake.MessageInteraction):
+        # check which roles are missing
         missing_required, missing_optional = check_roles(inter.author, self.required_kinks, self.optional_kinks)
         
+        # if all roles are present
         if not missing_required and not missing_optional:
             role_to_remove = disnake.utils.get(inter.guild.roles, name="Kink List Incomplete")
             await inter.author.remove_roles(role_to_remove)
