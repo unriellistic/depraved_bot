@@ -1,7 +1,7 @@
 import disnake
 from disnake.ext import commands
 
-from depraved_bot.utils.check_roles import check_roles
+from depraved_bot.utils import check_roles
 from depraved_bot.config import RequiredKink, OptionalKink
 
 class RoleCheckerButton(disnake.ui.View):

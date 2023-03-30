@@ -5,7 +5,7 @@ from sqlalchemy import Engine, Table, select
 
 from depraved_bot.structures.kinks import RequiredKink, OptionalKink
 
-def load_config_from_yaml(path: Union[str, bytes, os.PathLike]) -> tuple[list, list]:
+def load_config_from_yaml(path: Union[str, bytes, os.PathLike]) -> tuple[list[RequiredKink], list[OptionalKink]]:
     '''Loads a config YAML file from the given path, extracts the relevant data, and returns them.'''
     with open(path, "r") as f:
         config = yaml.safe_load(f)
@@ -14,16 +14,16 @@ def load_config_from_yaml(path: Union[str, bytes, os.PathLike]) -> tuple[list, l
     optional_kinks = [OptionalKink.parse_obj(kink) for kink in config["kinks"]["optional_kinks"]]
     return required_kinks, optional_kinks
 
-def load_config_from_sql(engine: Engine, table_required: Table, table_optional: Table) -> tuple[list, list]:
+def load_config_from_sql(engine: Engine, required_table: Table, optional_table: Table) -> tuple[list, list]:
     '''Loads bot configuration data from a SQLAlchemy engine.'''
     required_kinks = []
     optional_kinks = []
 
     with engine.connect() as conn:
         # _mapping gives us the row in dict form, so we can pass it to pydantic parse_obj
-        for kink in conn.execute(select(table_required)):
+        for kink in conn.execute(select(required_table)):
             required_kinks.append(RequiredKink.parse_obj(kink._mapping))
-        for kink in conn.execute(select(table_optional)):
+        for kink in conn.execute(select(optional_table)):
             optional_kinks.append(OptionalKink.parse_obj(kink._mapping))
     
     return required_kinks, optional_kinks

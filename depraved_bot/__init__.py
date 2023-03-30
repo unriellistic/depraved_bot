@@ -5,9 +5,9 @@ from disnake.ext import commands
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, MetaData, Table, Column, BigInteger, String
 
-from depraved_bot.config import load_config_from_sql
-
 from depraved_bot.cogs import PingCog, RoleCheckerCog
+from depraved_bot.config import load_config_from_sql
+from depraved_bot.utils import init_tables
 
 # bot initialization
 command_sync_flags = commands.CommandSyncFlags.default()
@@ -43,25 +43,10 @@ if __name__ == "__main__":
     metadata_obj = MetaData()
 
     # initialize data tables and get existing data
-    table_required = Table(
-        "required_kinks",
-        metadata_obj,
-        Column("name", String, primary_key=True),
-        Column("id", BigInteger),
-        autoload_with=engine,
-    )
-    table_optional = Table(
-        "optional_kinks",
-        metadata_obj,
-        Column("name", String, primary_key=True),
-        Column("green", BigInteger),
-        Column("yellow", BigInteger),
-        Column("red", BigInteger),
-        autoload_with=engine,
-    )
+    required_table, optional_table, members_table = init_tables(engine, metadata_obj)
 
     # process the raw table data
-    required_kinks, optional_kinks = load_config_from_sql(engine, table_required, table_optional)
+    required_kinks, optional_kinks = load_config_from_sql(engine, required_table, optional_table)
 
     # add bot commands
     bot.add_cog(PingCog(bot))
