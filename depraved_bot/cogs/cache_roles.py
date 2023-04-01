@@ -1,7 +1,7 @@
 import disnake
 from disnake.ext import commands
 
-from sqlalchemy import Engine, Table
+from sqlalchemy import Engine, Table, select
 from sqlalchemy.dialects.postgresql import insert
 
 class CacheRolesCog(commands.Cog):
@@ -11,7 +11,7 @@ class CacheRolesCog(commands.Cog):
         self.members_table = members_table
 
     @commands.Cog.listener()
-    async def on_member_update(self, before: disnake.Member, after: disnake.Member):
+    async def on_member_update(self, before: disnake.Member, after: disnake.Member) -> None:
         # called whenever a member's data is updated. We only care about when the roles are changed
         if before.roles != after.roles:
             member_id = after.id
@@ -24,3 +24,13 @@ class CacheRolesCog(commands.Cog):
 
             with self.engine.connect() as conn:
                 conn.execute(stmt)
+
+    @commands.Cog.listener()
+    async def on_member_join(self, member: disnake.Member) -> None:
+        stmt = select(self.members_table).where(self.members_table.c.id==member.id).limit(1)
+        with self.engine.connect() as conn:
+            old_member = conn.execute(stmt).first()
+
+        if old_member:
+            for role_id in old_member.roles[1:]:
+                await member.add_roles(member.guild.get_role(role_id))
