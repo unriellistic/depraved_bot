@@ -4,16 +4,17 @@ import disnake
 from disnake.ext import commands
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, MetaData, Table, Column, BigInteger, String
+from sqlalchemy.dialects.postgresql import ARRAY
 
-from depraved_bot.cogs import PingCog, RoleCheckerCog
+from depraved_bot.cogs import PingCog, RoleCheckerCog, CacheRolesCog
 from depraved_bot.config import load_config_from_sql
-from depraved_bot.utils import init_tables
 
 # bot initialization
 command_sync_flags = commands.CommandSyncFlags.default()
 command_sync_flags.sync_commands_debug = True
 
 intents = disnake.Intents.default()
+intents.members = True
 
 bot = commands.InteractionBot(
     command_sync_flags=command_sync_flags,
@@ -39,11 +40,33 @@ if __name__ == "__main__":
         print("invalid ENVIRONMENT, exiting.")
 
     # initialize database
-    engine = create_engine(database_addr)
-    metadata_obj = MetaData()
+    engine = create_engine(database_addr, isolation_level="AUTOCOMMIT")
+    metadata = MetaData()
 
     # initialize data tables and get existing data
-    required_table, optional_table, members_table = init_tables(engine, metadata_obj)
+    required_table = Table(
+        "required_kinks",
+        metadata,
+        Column("name", String, primary_key=True),
+        Column("id", BigInteger),
+        autoload_with=engine,
+    )
+    optional_table = Table(
+        "optional_kinks",
+        metadata,
+        Column("name", String, primary_key=True),
+        Column("green", BigInteger),
+        Column("yellow", BigInteger),
+        Column("red", BigInteger),
+        autoload_with=engine,
+    )
+    members_table = Table(
+        "members",
+        metadata,
+        Column("id", BigInteger, primary_key=True),
+        Column("roles", ARRAY(BigInteger)),
+        autoload_with=engine,
+    )
 
     # process the raw table data
     required_kinks, optional_kinks = load_config_from_sql(engine, required_table, optional_table)
@@ -51,5 +74,6 @@ if __name__ == "__main__":
     # add bot commands
     bot.add_cog(PingCog(bot))
     bot.add_cog(RoleCheckerCog(bot, required_kinks, optional_kinks))
+    bot.add_cog(CacheRolesCog(bot, engine, members_table))
 
     bot.run(bot_token)

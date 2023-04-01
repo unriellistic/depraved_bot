@@ -23,6 +23,4 @@ class CacheRolesCog(commands.Cog):
             )
 
             with self.engine.connect() as conn:
-                await conn.execute(stmt)
-
-    
+                conn.execute(stmt)
