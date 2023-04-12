@@ -6,6 +6,7 @@ class RequiredKink(BaseModel):
 
 class OptionalKink(BaseModel):
     name: str
+    description: str
     green: int
     yellow: int
     red: int
