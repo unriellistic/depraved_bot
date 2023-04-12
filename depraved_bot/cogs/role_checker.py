@@ -1,3 +1,5 @@
+from typing import Union
+
 import disnake
 from disnake.ext import commands
 
@@ -19,8 +21,26 @@ class RoleCheckerCog(commands.Cog):
         required_components = [disnake.ui.Button(label=kink.name, custom_id=kink.name) for kink in self.required_kinks]
         await inter.channel.send(embed=required_embed, components=required_components)
 
+        for kink in self.optional_kinks:
+            embed = disnake.Embed(
+                title=kink.name,
+                description=kink.description,
+            )
+            msg = await inter.channel.send(embed=embed)
+            await msg.add_reaction("🟩")
+            await msg.add_reaction("🟨")
+            await msg.add_reaction("🟥")
+        
         # role checker, to be clicked when user has selected all roles
         view = RoleCheckerView(self.required_kinks, self.optional_kinks)
         await inter.channel.send("Please click this button when you're done selecting all your kink roles.", view=view)
 
         await inter.response.send_message("Message sent.", ephemeral=True)
+
+    @commands.Cog.listener()
+    async def on_button_click(self, inter: disnake.MessageInteraction):
+        # if the button for a required kink was clicked, add the role
+        for kink in self.required_kinks:
+            if kink.name == inter.component.custom_id:
+                role_to_add = disnake.utils.get(inter.guild.roles, name=kink.name)
+                await inter.author.add_roles(role_to_add)

@@ -5,7 +5,7 @@ kinks:
     id: 1089011874298871939
   optional_kinks:
   - name: opt
-    desc: An optional role.
+    description: An optional role.
     green: 1089011938857603172
     yellow: 1089011974802788492
     red: 1089012004007710730

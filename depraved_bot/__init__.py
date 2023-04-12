@@ -15,6 +15,7 @@ command_sync_flags.sync_commands_debug = True
 
 intents = disnake.Intents.default()
 intents.members = True
+intents.reactions = True
 
 bot = commands.InteractionBot(
     command_sync_flags=command_sync_flags,
