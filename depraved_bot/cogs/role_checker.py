@@ -14,9 +14,13 @@ class RoleCheckerCog(commands.Cog):
 
     @commands.slash_command(description="Set up the role checking button in this channel.")
     async def setup_button(self, inter: disnake.ApplicationCommandInteraction):
+        # show "bot is thinking..." so the interaction doesn't show as failed
+        await inter.response.defer(ephemeral=True)
+
+        # embed (the blockquote thing)
         required_embed = disnake.Embed(
             title="Required Kinks", 
-            description="These kinks are primary to the fantasy of the server. You must agree to engage in CNC (consensual noncon) play involving these kinks to gain access to the server.",
+            description="These kinks are primary to the fantasy of the server. You must agree to engage in CNC (consensual non-consent) play involving these kinks to gain access to the server.",
         )
         required_components = [disnake.ui.Button(label=kink.name, custom_id=kink.name) for kink in self.required_kinks]
         await inter.channel.send(embed=required_embed, components=required_components)
@@ -35,7 +39,8 @@ class RoleCheckerCog(commands.Cog):
         view = RoleCheckerView(self.required_kinks, self.optional_kinks)
         await inter.channel.send("Please click this button when you're done selecting all your kink roles.", view=view)
 
-        await inter.response.send_message("Message sent.", ephemeral=True)
+        # confirmation of completion
+        await inter.edit_original_response("Message sent.")
 
     @commands.Cog.listener()
     async def on_button_click(self, inter: disnake.MessageInteraction):
