@@ -55,6 +55,10 @@ class RoleCheckerCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction: disnake.Reaction, member: disnake.Member):
+        # if the reaction was added by this bot
+        if member.id == self.bot.user.id:
+            return
+
         # if the message is not from this bot
         if reaction.message.author.id != self.bot.user.id:
             return
@@ -70,11 +74,19 @@ class RoleCheckerCog(commands.Cog):
         if not kink_to_add:
             return
         
+        # remove other reactions on the message (this will also trigger reaction remove event and remove associated roles)
+        for existing_reaction in reaction.message.reactions:
+            # don't remove the reaction they just added
+            if existing_reaction == reaction:
+                continue
+            rxn_users = await existing_reaction.users().flatten()
+            if member.id in (user.id for user in rxn_users):
+                await reaction.message.remove_reaction(existing_reaction, member)
+
+
         green_role = member.guild.get_role(kink_to_add.green)
         yellow_role = member.guild.get_role(kink_to_add.yellow)
         red_role = member.guild.get_role(kink_to_add.red)
-
-        await member.remove_roles(green_role, yellow_role, red_role)
 
         # actually add the role now, based on the emoji
         if reaction.emoji == "🟩":
@@ -101,8 +113,12 @@ class RoleCheckerCog(commands.Cog):
         if not kink_to_add:
             return
         
-        green_role = member.guild.get_role(kink_to_add.green)
-        yellow_role = member.guild.get_role(kink_to_add.yellow)
-        red_role = member.guild.get_role(kink_to_add.red)
+        # figure out which role to remove, based on the emoji
+        if reaction.emoji == "🟩":
+            role = kink_to_add.green
+        elif reaction.emoji == "🟨":
+            role = kink_to_add.yellow
+        elif reaction.emoji == "🟥":
+            role = kink_to_add.red
 
-        await member.remove_roles(green_role, yellow_role, red_role)
+        await member.remove_roles(member.guild.get_role(role))
