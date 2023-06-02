@@ -11,11 +11,212 @@ kinks:
     id: 1061188839298842665
   optional_kinks:
   - name: Ageplay
+    description: Engaging in kink play involving an age difference (but all characters are 18+)
     green: 1061199334789627904
     yellow: 1061199344000319509
     red: 1061199351680073829
   - name: Anal
+    description: Sex acts involving penetration or toying of the anus.
     green: 1061198539155308665
     yellow: 1061199148453482556
     red: 1061199322907152486
-    
+  - name: Bestiality
+    description: Sex acts involving an animal, typically to degrade the human involved.
+    green: 1061198530569588776
+    yellow: 1061198533329420298
+    red: 1061198537012027412
+  - name: Body Modification
+    description: Sex acts involving an animal, typically to degrade the human involved.
+    green: 1061197920503857192
+    yellow: 1061197957757669406
+    red: 1061198182027112490
+  - name: Body Writing
+    description: Engaging in kink play by writing typically degrading things on a submissive.
+    green: 1061197552931840072
+    yellow: 1061197911184134164
+    red: 1061197914933841940
+  - name: Bondage (Light)
+    description: Engaging in kink play where the submissive is bound. Light bondage usually entails ropes, chains, collars and handcuffs.
+    green: 1061197249599782952
+    yellow: 1061197548724965466
+    red: 1061197550981488640
+  - name: Bondage (Extreme)
+    description: Engaging in kink play where the submissive is bound. Extreme bondage tends to involve gear that restricts movement severely, like strait jackets and torture racks.
+    green: 1061197030422237245
+    yellow: 1061197032452259880
+    red: 1061197034817867817
+  - name: Branding
+    description: Engaging in kink play using a hot iron to scar a submissive.
+    green: 1061198184061341769
+    yellow: 1061198523883847730
+    red: 1061198526559813672
+  - name: Breath Play
+    description: Restricting the submissive's breathing during play.
+    green: 1061211501026881556
+    yellow: 1061211542521122867
+    red: 1061211547277463552
+  - name: Breeding
+    description: Sex acts with the intent of getting a female pregnant. May or may not include impregnation as kink
+    green: 1061195875893923852
+    yellow: 1061195878100127784
+    red: 1061196927368175646
+  - name: Clothing Control
+    description: Engaging in kink play where the submissive's outfit is partially or completely chosen by the dominant.
+    green: 1061195663209148436
+    yellow: 1061195665281130598
+    red: 1061195873868062790
+  - name: Dacryphilia
+    description: The desire to cry or induce crying during kink play or sex.
+    green: 1061195646507425792
+    yellow: 1061195658985476156
+    red: 1061195661162332210
+  - name: Diet Control
+    description: Engaging in kink play where the submissive's diet is controlled by the dominant. ("Cum Diet" falls under this kink.)
+    green: 1061195089717755945
+    yellow: 1061195443880599653
+    red: 1061195446707560488
+  - name: Drug Play
+    description: Drugging or being drugged during kink play, such as with aphrodisiacs, addictive drugs or "date r*pe" drugs.
+    green: 1061194747567427655
+    yellow: 1061195084705562625
+    red: 1061195087431876658
+  - name: Electrostimulation
+    description: Giving or receiving electric shocks during kink play.
+    green: 1061194735508799519
+    yellow: 1061194740374192160
+    red: 1061194743943548999
+  - name: Encasement
+    description: Engaging in kink play where the submissive is stuck and unable to free themselves. ("Stuckage" falls under this kink.)
+    green: 1061194625571885068
+    yellow: 1061194629409669230
+    red: 1061194634291838976
+  - name: Exhibitionism
+    description: Public exposure and/or sex acts.
+    green: 1061194345895698493
+    yellow: 1061194615459414026
+    red: 1061194621864136725
+  - name: Extreme Pain
+    description: Engaging in kink play where the submissive has extreme and/or torturous pain inflicted onto them.
+    green: 1061194339595866182
+    yellow: 1061194341713989702
+    red: 1061194344037617694
+  - name: Fear Play
+    description: Engaging in kink play involving being afraid and/or inflicting fear.
+    green: 1061193935663403038
+    yellow: 1061193947071914004
+    red: 1061193949361995866
+  - name: Feet
+    description: Sexual attraction to feet.
+    green: 1061193593945084015
+    yellow: 1061193933067141162
+    red: 1061193924003237951
+  - name: Gangbangs
+    description: Engaging in sex acts between many dominants and much fewer submissives, or vice versa.
+    green: 1061193089336737832
+    yellow: 1061193412478521364
+    red: 1061193416127565824
+  - name: Gaslighting
+    description: Engaging in kink play where the submissive's sanity is questioned through a dominant telling them that their own experiences are lies.
+    green: 1061193080801329152
+    yellow: 1061193084462964857
+    red: 1061193086509793380
+  - name: Gore
+    description: Engaging in kink play involving bloody violence and serious injuries.
+    green: 1061193072328847360
+    yellow: 1061193074669256704
+    red: 1061193077190053919
+  - name: Gun Play
+    description: Using a gun in kink play.
+    green: 1061193065697648660
+    yellow: 1061193068331671552
+    red: 1061193070382682122
+  - name: Hypnosis
+    description: Engaging in kink play involving hypnotising and/or brainwashing the submissive into behaving unlike how they usually would.
+    green: 1061193057959161866
+    yellow: 1061193060064702496
+    red: 1061193062606454874
+  - name: IQ Drain
+    description: Making the submissive dumber, eg. through bimbofication, brain damage or brain drain.
+    green: 1061221342336270336
+    yellow: 1061221346048233482
+    red: 1061221357079253064
+  - name: Knife Play
+    description: Using a knife or other sharp object in kink play.
+    green: 1061192622212911187
+    yellow: 1061192625014710302
+    red: 1061192885845893221
+  - name: Lactation
+    description: Engaging in kink play involving inducing lactation/milking.
+    green: 1061191940021956690
+    yellow: 1061191942945386507
+    red: 1061192234818609152
+  - name: Needles
+    description: Engaging in kink play involving poking or puncturing a submissive with needles, syringes, etc.
+    green: 1061191636354338857
+    yellow: 1061191638380199956
+    red: 1061191936540676126
+  - name: Objectification
+    description: Treating the submissive like an object, less than a person.
+    green: 1071047530130968667
+    yellow: 1071047466092347422
+    red: 1071047403177787442
+  - name: Orgasm Control
+    description: Engaging in kink play where the submissive's ability to orgasm is controlled by the dominant, either through commands or chastity.
+    green: 1061191629710565386
+    yellow: 1061191631904186368
+    red: 1061191634160730143
+  - name: Pet Play
+    description: Engaging in kink play where the submissive acts as the dominant's pet.
+    green: 1061191614598488094
+    yellow: 1061191617115070525
+    red: 1061191619942027274
+  - name: Primal
+    description: Exhibiting animalistic behaviours during kink play.
+    green: 1061191598131650590
+    yellow: 1061191601021530172
+    red: 1061191612161601596
+  - name: Race Play
+    description: Engaging in kink play revolving around a difference in race. "Blacked/Bleached" dynamics fall under this kink.
+    green: 1061189873769394227
+    yellow: 1061190700827422760
+    red: 1061191095393984522
+  - name: R*pe
+    description: Sex acts in which consent is dubious or nonexistent. Can be forceful.
+    green: 1061191098141253703
+    yellow: 1061191100401979452
+    red: 1061191102570438696
+  - name: Routine Control
+    description: Engaging in kink play where the submissive's daily routine is controlled by the dominant. This includes bathroom control, forced masturbation and bedtime/mealtime control.
+    green: 1061190705852198994
+    yellow: 1061189882929762314
+    red: 1061190703562108948
+  - name: Scat
+    description: Engaging in kink play that involves feces in any fashion.
+    green: 1061189888386551809
+    yellow: 1061189891574218762
+    red: 1061189894581522522
+  - name: Sensory Deprivation
+    description: Depriving the submissive of one or more senses.
+    green: 1061188852829659156
+    yellow: 1061188942973636619
+    red: 1061189621834338324
+  - name: Somnophilia
+    description: Engaging in sex acts with a sleeping or unconscious partner.
+    green: 1114067677183496233
+    yellow: 1114067631427825714
+    red: 1114067551564083291
+  - name: Tattoos
+    description: Engaging in kink play involving tattoos or the receiving of tattoos, that may or may not be degrading in nature.
+    green: 1061189269458260028
+    yellow: 1061189278694133790
+    red: 1061189451080020078
+  - name: Temperature Play
+    description: Engaging in kink play involving very hot and/or cold things, such as wax play or ice play.
+    green: 1061189286306783333
+    yellow: 1061189022149525644
+    red: 1061189292212355122
+  - name: Watersports
+    description: Engaging in kink play involving urine.
+    green: 1061188856713588817
+    yellow: 1061188949869068309
+    red: 1061189034124263534

@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 
 init_sql_db.py
+.vscode/
