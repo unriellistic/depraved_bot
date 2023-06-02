@@ -1,0 +1,15 @@
+version: '3.4'
+
+networks:
+  pg_net:
+    external: true
+
+services:
+  depravedbot:
+    image: depravedbot
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    networks:
+      - pg_net
