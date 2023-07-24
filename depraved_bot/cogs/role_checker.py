@@ -5,6 +5,7 @@ from disnake.ext import commands
 
 from depraved_bot.structures.kinks import RequiredKink, OptionalKink
 from depraved_bot.views import RoleCheckerView
+from depraved_bot.utils import check_roles
 
 class RoleCheckerCog(commands.Cog):
     def __init__(self, bot: commands.InteractionBot, required_kinks: list[RequiredKink], optional_kinks: list[OptionalKink]):
@@ -12,7 +13,7 @@ class RoleCheckerCog(commands.Cog):
         self.required_kinks = required_kinks
         self.optional_kinks = optional_kinks
 
-    @commands.slash_command(description="Set up the role checking button in this channel.")
+    @commands.slash_command(description="Set up the kink role buttons in this channel.")
     async def setup_button(self, inter: disnake.ApplicationCommandInteraction):
         # show "bot is thinking..." so the interaction doesn't show as failed
         await inter.response.defer(ephemeral=True)
@@ -36,14 +37,37 @@ class RoleCheckerCog(commands.Cog):
             await msg.add_reaction("🟥")
         
         # role checker, to be clicked when user has selected all roles
-        view = RoleCheckerView(self.required_kinks, self.optional_kinks)
-        await inter.channel.send("Please click this button when you're done selecting all your kink roles.", view=view)
+        #view = RoleCheckerView(self.required_kinks, self.optional_kinks)
+        #await inter.channel.send("Please click this button when you're done selecting all your kink roles.", view=view)
+
+        await inter.channel.send("Please click this button when you're done selecting all your kink roles.", components=[
+            disnake.ui.Button(label="I've selected all my kinks", style=disnake.ButtonStyle.primary, custom_id="check_roles")
+        ])
 
         # confirmation of completion
         await inter.edit_original_response("Message sent.")
 
+    
+
     @commands.Cog.listener()
     async def on_button_click(self, inter: disnake.MessageInteraction):
+        # if check_roles button was clicked, check roles
+        # check which roles are missing
+        missing_required, missing_optional = check_roles(inter.author, self.required_kinks, self.optional_kinks)
+        
+        # if all roles are present
+        if not missing_required and not missing_optional:
+            role_to_remove = disnake.utils.get(inter.guild.roles, name="Kink List Incomplete")
+            await inter.author.remove_roles(role_to_remove)
+            await inter.response.send_message("Welcome to the server!", ephemeral = True)
+        else:
+            response = ""
+            if missing_required: 
+                response += f"You're missing the following required roles: {', '.join(kink.name for kink in missing_required)}\n"
+            if missing_optional:
+                response += f"You're missing the following optional roles: {', '.join(kink.name for kink in missing_optional)}"
+            await inter.response.send_message(response, ephemeral = True)
+
         # if the button for a required kink was clicked, add the role
         for kink in self.required_kinks:
             if kink.name == inter.component.custom_id:
@@ -104,77 +128,7 @@ class RoleCheckerCog(commands.Cog):
         elif rxn_name == "🟨":
             await member.add_roles(yellow_role)
         elif rxn_name == "🟥":
-            await member.add_roles(red_role)        
-
-    # @commands.Cog.listener()
-    # async def on_reaction_add(self, reaction: disnake.Reaction, member: disnake.Member):
-    #     # if the reaction was added by this bot
-    #     if member.id == self.bot.user.id:
-    #         return
-
-    #     # if the message is not from this bot
-    #     if reaction.message.author.id != self.bot.user.id:
-    #         return
-        
-    #     # message has no embeds (not the right message)
-    #     if not reaction.message.embeds:
-    #         return
-        
-    #     kink_name = reaction.message.embeds[0].title
-    #     kink_to_add = next((x for x in self.optional_kinks if x.name == kink_name), None)
-
-    #     # kink name isn't in the list for some reason (reaction done on wrong embed)
-    #     if not kink_to_add:
-    #         return
-        
-    #     # remove other reactions on the message (this will also trigger reaction remove event and remove associated roles)
-    #     for existing_reaction in reaction.message.reactions:
-    #         # don't remove the reaction they just added
-    #         if existing_reaction == reaction:
-    #             continue
-    #         rxn_users = await existing_reaction.users().flatten()
-    #         if member.id in (user.id for user in rxn_users):
-    #             await reaction.message.remove_reaction(existing_reaction, member)
-
-
-    #     green_role = member.guild.get_role(kink_to_add.green)
-    #     yellow_role = member.guild.get_role(kink_to_add.yellow)
-    #     red_role = member.guild.get_role(kink_to_add.red)
-
-    #     # actually add the role now, based on the emoji
-    #     if reaction.emoji == "🟩":
-    #         await member.add_roles(green_role)
-    #     elif reaction.emoji == "🟨":
-    #         await member.add_roles(yellow_role)
-    #     elif reaction.emoji == "🟥":
-    #         await member.add_roles(red_role)
-
-    # @commands.Cog.listener()
-    # async def on_reaction_remove(self, reaction: disnake.Reaction, member: disnake.Member):
-    #     # if the message is not from this bot
-    #     if reaction.message.author.id != self.bot.user.id:
-    #         return
-        
-    #     # message has no embeds (not the right message)
-    #     if not reaction.message.embeds:
-    #         return
-        
-    #     kink_name = reaction.message.embeds[0].title
-    #     kink_to_add = next((x for x in self.optional_kinks if x.name == kink_name), None)
-
-    #     # kink name isn't in the list for some reason (likely reaction done on wrong embed)
-    #     if not kink_to_add:
-    #         return
-        
-    #     # figure out which role to remove, based on the emoji
-    #     if reaction.emoji == "🟩":
-    #         role = kink_to_add.green
-    #     elif reaction.emoji == "🟨":
-    #         role = kink_to_add.yellow
-    #     elif reaction.emoji == "🟥":
-    #         role = kink_to_add.red
-
-    #     await member.remove_roles(member.guild.get_role(role))
+            await member.add_roles(red_role)
     
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload: disnake.RawReactionActionEvent):

@@ -75,6 +75,6 @@ if __name__ == "__main__":
     # add bot commands
     bot.add_cog(PingCog(bot))
     bot.add_cog(RoleCheckerCog(bot, required_kinks, optional_kinks))
-    bot.add_cog(CacheRolesCog(bot, engine, members_table))
+    # bot.add_cog(CacheRolesCog(bot, engine, members_table))
 
     bot.run(bot_token)
