@@ -109,6 +109,16 @@ class RoleCheckerCog(commands.Cog):
         if not kink_to_add:
             return
         
+        # actually add the role now, based on the emoji
+        if rxn_name == "🟩":
+            role = guild.get_role(kink_to_add.green)
+        elif rxn_name == "🟨":
+            role = guild.get_role(kink_to_add.yellow)
+        elif rxn_name == "🟥":
+            role = guild.get_role(kink_to_add.red)
+        
+        await member.add_roles(role)
+            
         # remove other reactions on the message (this will also trigger reaction remove event and remove associated roles)
         for existing_reaction in msg.reactions:
             # don't remove the reaction they just added
@@ -117,18 +127,6 @@ class RoleCheckerCog(commands.Cog):
             rxn_users = await existing_reaction.users().flatten()
             if user_id in (user.id for user in rxn_users):
                 await msg.remove_reaction(existing_reaction, member)
-                
-        green_role = guild.get_role(kink_to_add.green)
-        yellow_role = guild.get_role(kink_to_add.yellow)
-        red_role = guild.get_role(kink_to_add.red)
-
-        # actually add the role now, based on the emoji
-        if rxn_name == "🟩":
-            await member.add_roles(green_role)
-        elif rxn_name == "🟨":
-            await member.add_roles(yellow_role)
-        elif rxn_name == "🟥":
-            await member.add_roles(red_role)
     
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload: disnake.RawReactionActionEvent):
