@@ -108,24 +108,27 @@ class RoleCheckerCog(commands.Cog):
         # kink name isn't in the list for some reason (reaction done on wrong embed)
         if not kink_to_add:
             return
-        
+
+        green_role = guild.get_role(kink_to_add.green)
+        yellow_role = guild.get_role(kink_to_add.yellow)
+        red_role = guild.get_role(kink_to_add.red)
+
         # actually add the role now, based on the emoji
         if rxn_name == "🟩":
-            role = guild.get_role(kink_to_add.green)
+            await member.add_roles(green_role)
+            await member.remove_roles(yellow_role, red_role)
         elif rxn_name == "🟨":
-            role = guild.get_role(kink_to_add.yellow)
+            await member.add_roles(yellow_role)
+            await member.remove_roles(green_role, red_role)
         elif rxn_name == "🟥":
-            role = guild.get_role(kink_to_add.red)
-        
-        await member.add_roles(role)
+            await member.add_roles(red_role)
+            await member.remove_roles(green_role, yellow_role)
+
             
         # remove other reactions on the message (this will also trigger reaction remove event and remove associated roles)
         for existing_reaction in msg.reactions:
             # don't remove the reaction they just added
-            if existing_reaction.emoji == payload.emoji.name:
-                continue
-            rxn_users = await existing_reaction.users().flatten()
-            if user_id in (user.id for user in rxn_users):
+            if existing_reaction.emoji != payload.emoji.name:
                 await msg.remove_reaction(existing_reaction, member)
     
     @commands.Cog.listener()
